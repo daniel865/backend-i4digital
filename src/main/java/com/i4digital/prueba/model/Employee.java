@@ -34,6 +34,9 @@ public class Employee implements Serializable{
 	
 	@Column(name = "occupation", length = 50)
 	private String occupation;
+	
+	@Column(name = "phone", length = 20)
+	private String phone;
 
 	public Integer getId() {
 		return id;
@@ -75,6 +78,14 @@ public class Employee implements Serializable{
 		this.occupation = occupation;
 	}
 
+	public String getPhone() {
+		return phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+	
 	
 	
 }
