@@ -2,13 +2,7 @@ package com.i4digital.prueba.model;
 
 import java.io.Serializable;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-
+import javax.persistence.*;
 
 
 @Entity
@@ -23,9 +17,6 @@ public class Employee implements Serializable{
 	@Column(name = "id", columnDefinition = "serial")
 	private Integer id;
 	
-	@Column(name = "id_user")
-	private Integer user;
-	
 	@Column(name = "name", length = 100)
 	private String name;
 	
@@ -38,6 +29,13 @@ public class Employee implements Serializable{
 	@Column(name = "phone", length = 20)
 	private String phone;
 
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "id_user", referencedColumnName = "id")
+	private User user;
+
+	public Employee() {
+	}
+
 	public Integer getId() {
 		return id;
 	}
@@ -46,11 +44,11 @@ public class Employee implements Serializable{
 		this.id = id;
 	}
 
-	public Integer getUser() {
+	public User getUser() {
 		return user;
 	}
 
-	public void setUser(Integer user) {
+	public void setUser(User user) {
 		this.user = user;
 	}
 
@@ -85,7 +83,91 @@ public class Employee implements Serializable{
 	public void setPhone(String phone) {
 		this.phone = phone;
 	}
+
+	public static Employee from(Employee employee) {
+		return new Employee.EmployeeBuilder()
+				.setId(employee.getId())
+				.setName(employee.getName())
+				.setSurname(employee.getSurname())
+				.setOccupation(employee.getOccupation())
+				.setPhone(employee.getPhone())
+				.setUser(employee.getUser())
+				.build();
+	}
+
+	public static Employee from(Employee employee, User user) {
+		return new Employee.EmployeeBuilder()
+				.setId(employee.getId())
+				.setName(employee.getName())
+				.setSurname(employee.getSurname())
+				.setOccupation(employee.getOccupation())
+				.setPhone(employee.getPhone())
+				.setUser(user)
+				.build();
+	}
 	
-	
-	
+	private Employee(EmployeeBuilder builder) {
+		this.id  = builder.id;
+		this.name = builder.name;
+		this.surname = builder.surname;
+		this.occupation = builder.occupation;
+		this.phone = builder.phone;
+		this.user  = builder.user;
+	}
+
+	public static class EmployeeBuilder {
+		private Integer id;
+		private String name;
+		private String surname;
+		private String occupation;
+		private String phone;
+		private User user;
+
+		public EmployeeBuilder() {
+		}
+
+		public EmployeeBuilder(Integer id, String name, String surname, String occupation, String phone, User user) {
+			this.id = id;
+			this.name = name;
+			this.surname = surname;
+			this.occupation = occupation;
+			this.phone = phone;
+			this.user = user;
+		}
+
+		public EmployeeBuilder setId(Integer id) {
+			this.id = id;
+			return this;
+		}
+
+		public EmployeeBuilder setName(String name) {
+			this.name = name;
+			return this;
+		}
+
+		public EmployeeBuilder setSurname(String surname) {
+			this.surname = surname;
+			return this;
+		}
+
+		public EmployeeBuilder setOccupation(String occupation) {
+			this.occupation = occupation;
+			return this;
+		}
+
+		public EmployeeBuilder setPhone(String phone) {
+			this.phone = phone;
+			return this;
+		}
+
+		public EmployeeBuilder setUser(User user) {
+			this.user = user;
+			return this;
+		}
+
+		public Employee build() {
+			return new Employee(this);
+		}
+	}
+
 }

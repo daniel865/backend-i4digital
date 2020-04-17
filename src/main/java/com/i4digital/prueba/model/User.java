@@ -33,6 +33,9 @@ public class User implements Serializable{
 	@Column(name = "email", length = 50, nullable = false)
 	private String email;
 
+	public User() {
+	}
+
 	public Integer getId() {
 		return id;
 	}
@@ -64,8 +67,73 @@ public class User implements Serializable{
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	
-	
-	
+
+	public static User from(User user) {
+		return new UserBuilder()
+				.setId(user.getId())
+				.setUsername(user.getUsername())
+				.setPassword(user.getPassword())
+				.setEmail(user.getEmail())
+				.build();
+	}
+
+	public static User from(User user, String password) {
+		return new UserBuilder()
+				.setId(user.getId())
+				.setUsername(user.getUsername())
+				.setPassword(password)
+				.setEmail(user.getEmail())
+				.build();
+	}
+
+	private User(UserBuilder builder) {
+		this.id = builder.id;
+		this.username = builder.username;
+		this.password = builder.password;
+		this.email = builder.email;
+	}
+
+	public static class UserBuilder {
+		private Integer id;
+		private String username;
+		private String password;
+		private String email;
+
+		public UserBuilder() {
+		}
+
+		public UserBuilder(Integer id, String username, String password, String email) {
+			this.id = id;
+			this.username = username;
+			this.password = password;
+			this.email = email;
+		}
+
+		public UserBuilder setId(Integer id) {
+			this.id = id;
+			return this;
+		}
+
+		public UserBuilder setUsername(String username) {
+			this.username = username;
+			return this;
+		}
+
+		public UserBuilder setPassword(String password) {
+			this.password = password;
+			return this;
+		}
+
+		public UserBuilder setEmail(String email) {
+			this.email = email;
+			return this;
+		}
+
+		public User build() {
+			return new User(this);
+		}
+	}
+
+
 }
 
